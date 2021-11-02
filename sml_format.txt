@@ -1,0 +1,32 @@
+Format spec:
+
+File:
+char[4] magic ("STC1")
+int32 crc (crc32 of all the data in the file, not including the first 8 bytes)
+<Data segment...>
+
+Data segment:
+uint8 type
+uint32 length
+<Length bytes of data>
+
+Types:
+0: Comment
+	length bytes of undefined data
+1: Vertex list
+	(length/12) entry list of: float x, y, z
+2: Double-precision vertex list
+	(length/24) entry list of: double x, y, z
+3: Triangle list
+	(length/12) entry list of: uint32 a, b, c
+	Entries are the index of a vertex in the most recent vertex list (type 1 or 2)
+4: Quad list
+	(length/16) entry list of: uint32 a, b, c, d
+	Entries are the index of a vertex in the most recent vertex list (type 1 or 2)
+5: Triangle strip
+	First triangle (12 bytes): uint32 a, b, c
+	Successive triangles (4 bytes) use the previous 2 points plus: uint32 n
+	Entries are the index of a vertex in the most recent vertex list (type 1 or 2)
+
+Notes:
+- Normals are done by vertex order, matching the STL format.
