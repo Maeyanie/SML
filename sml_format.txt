@@ -25,8 +25,9 @@ Types:
 	Entries are the index of a vertex in the most recent vertex list (type 1 or 2)
 5: Triangle strip
 	First triangle (12 bytes): uint32 a, b, c
-	Successive triangles (4 bytes) use the previous 2 points plus: uint32 n
+	Successive triangles (4 bytes): uint32 n
 	Entries are the index of a vertex in the most recent vertex list (type 1 or 2)
 
 Notes:
-- Normals are done by vertex order, matching the STL format.
+- Normals are done by right-hand-rule vertex order, matching the STL format.
+- Triangle strips use previous vertices in a manner similar to OpenGL's behaviour, except normal order as above.

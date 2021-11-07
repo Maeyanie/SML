@@ -27,16 +27,25 @@ Mesh* readSTL(filesystem::path file) {
 	
 	Mesh* mesh = new Mesh();
 	
-	printf("Reading %u triangles...", triCount);
-	fflush(stdout);
+	printf("Reading %u triangles...\n", triCount);
+	mesh->v.reserve(triCount*3);
+	mesh->t.reserve(triCount);
+	
 	STLTri stltri;
+	time_t nextupdate = time(NULL) + 1;
 	for (uint32_t t = 0; t < triCount; t++) {
+		if (time(NULL) >= nextupdate) {
+			printf("%u", t);
+			fflush(stdout);
+			printf("\r");
+			nextupdate++;
+		}
 		fread(&stltri, 50, 1, fp);
-		Triangle* tri = new Triangle(mesh, stltri);
+		shared_ptr<Triangle> tri = make_shared<Triangle>(mesh, stltri);
 		mesh->t.push_back(tri);
 	}
 	mesh->lookup.clear();
-	printf("Done.\n");
+	printf("\nLoaded %u vertices and %u triangles.\n", (uint32_t)mesh->v.size(), (uint32_t)mesh->t.size());
 	
 	fclose(fp);
 	return mesh;
@@ -65,26 +74,24 @@ void writeSTL(filesystem::path file, Mesh* mesh) {
 	uint32_t triCount = mesh->t.size();
 	fwrite(&triCount, 4, 1, fp);
 	
-	vector<Vertex*> verts(mesh->v.begin(), mesh->v.end());
-	
 	STLTri stltri;
 	memset(&stltri, 0, sizeof(stltri));
 	
 	for (auto& i : mesh->t) {
-		Vertex* v = verts[i->a];
-		stltri.v[0][0] = v->fx();
-		stltri.v[0][1] = v->fy();
-		stltri.v[0][2] = v->fz();
+		shared_ptr<Vertex> v = mesh->v[i->a];
+		stltri.v[0][0] = v->x;
+		stltri.v[0][1] = v->y;
+		stltri.v[0][2] = v->z;
 
-		v = verts[i->b];
-		stltri.v[1][0] = v->fx();
-		stltri.v[1][1] = v->fy();
-		stltri.v[1][2] = v->fz();
+		v = mesh->v[i->b];
+		stltri.v[1][0] = v->x;
+		stltri.v[1][1] = v->y;
+		stltri.v[1][2] = v->z;
 
-		v = verts[i->c];
-		stltri.v[2][0] = v->fx();
-		stltri.v[2][1] = v->fy();
-		stltri.v[2][2] = v->fz();
+		v = mesh->v[i->c];
+		stltri.v[2][0] = v->x;
+		stltri.v[2][1] = v->y;
+		stltri.v[2][2] = v->z;
 		
 		ret = fwrite(&stltri, sizeof(stltri), 1, fp);
 		assert(ret == 1);
