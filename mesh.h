@@ -18,7 +18,6 @@ public:
 			float x, y, z;
 		};
 		float c[3];
-		uint32_t i[3];
 	};
 		
 	
@@ -56,15 +55,11 @@ public:
 		return fabs(x - rhs.x) + fabs(y - rhs.y) + fabs(z - rhs.z);
 	}
 	inline bool closeTo(const Vertex* rhs) const {
-		bool c[3];
-		c[0] = (i[0] & 0xFFFFFFF0) == (rhs->i[0] & 0xFFFFFFF0);
-		c[1] = (i[1] & 0xFFFFFFF0) == (rhs->i[1] & 0xFFFFFFF0);
-		c[2] = (i[2] & 0xFFFFFFF0) == (rhs->i[2] & 0xFFFFFFF0);
-		
-		/*bool cx = fabs(x - rhs->x) < 0.0001;
-		bool cy = fabs(y - rhs->y) < 0.0001;
-		bool cz = fabs(z - rhs->z) < 0.0001;*/
-		return c[0] && c[1] && c[2];
+		bool b[3];
+		b[0] = fabs(x - rhs->x) < 0.0001;
+		b[1] = fabs(y - rhs->y) < 0.0001;
+		b[2] = fabs(z - rhs->z) < 0.0001;
+		return b[0] && b[1] && b[2];
 	}
 };
 
@@ -192,6 +187,7 @@ public:
 	std::vector<std::shared_ptr<Vertex>> v;
 	std::vector<std::shared_ptr<Triangle>> t;
 	std::vector<std::shared_ptr<Quad>> q;
+	std::vector<std::string> comments;
 	
 	SpatialMap spatialMap;
 	std::unordered_map<std::shared_ptr<Vertex>,size_t,VertexPtrHash,VertexPtrEquals> lookup;
