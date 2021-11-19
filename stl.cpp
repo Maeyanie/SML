@@ -23,7 +23,10 @@ Mesh* readSTL(filesystem::path file) {
 	
 	uint32_t triCount;
 	fread(&triCount, 4, 1, fp);
-	assert(84 + (triCount*50) == filesystem::file_size(file));
+	if (84 + (triCount*50) != filesystem::file_size(file)) {
+		fprintf(stderr, "File '%s' size did not match triangle count %u.\n", file.c_str(), triCount);
+		exit(__LINE__);
+	}
 	
 	Mesh* mesh = new Mesh();
 	
@@ -40,7 +43,11 @@ Mesh* readSTL(filesystem::path file) {
 			printf("\r");
 			nextupdate++;
 		}
-		fread(&stltri, 50, 1, fp);
+		size_t rc = fread(&stltri, 50, 1, fp);
+		if (rc != 1) {
+			fprintf(stderr, "Error reading %s: %m\n", file.c_str());
+			exit(__LINE__);
+		}
 		shared_ptr<Triangle> tri = make_shared<Triangle>(mesh, stltri);
 		mesh->t.push_back(tri);
 	}
