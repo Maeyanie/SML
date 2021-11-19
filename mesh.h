@@ -80,6 +80,8 @@ public:
 class VertexPtrEquals {
 public:
 	bool operator()(const std::shared_ptr<Vertex> lhs, const std::shared_ptr<Vertex> rhs) const {
+		if (lhs == rhs) return true;
+		if (!lhs || !rhs) return false;
 		return *lhs == *rhs;
 	}
 };
@@ -207,7 +209,7 @@ public:
 		spatialMap.init(this);
 		
 		#ifdef USE_SPARSEHASH
-		lookup.set_empty_key(std::make_shared<Vertex>(NULL));
+		lookup.set_empty_key(std::shared_ptr<Vertex>(nullptr));
 		#endif
 	}
 	inline void add(std::shared_ptr<Vertex> V) {

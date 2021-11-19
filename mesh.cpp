@@ -16,9 +16,13 @@ static inline uint32_t findVertex(Mesh* mesh, shared_ptr<Vertex> v) {
 	}
 	*/
 
-	uint32_t ret = mesh->lookup.size();
+	uint32_t ret = mesh->v.size();
 	mesh->add(v);
+	#ifdef USE_SPARSEHASH
+	mesh->lookup.insert({v, ret});
+	#else
 	mesh->lookup.emplace(v, ret);
+	#endif
 	return ret;
 }
 
