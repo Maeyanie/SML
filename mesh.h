@@ -1,6 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "config.h"
 #include <string.h>
 #include <math.h>
 #include <list>
