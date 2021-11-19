@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include <list>
 #include <map>
+#ifdef USE_SPARSEHASH
+#include <sparsehash/dense_hash_set>
+using namespace google;
+#else
 #include <unordered_set>
+#endif
 
 #include "mesh.h"
 #include "sml.h"
@@ -10,25 +15,24 @@ using namespace std;
 
 void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>& strips) {
 	list<Triangle*> queue;
+	uint32_t count = 0;
 	for (auto& i : mesh->t) {
 		queue.push_back(i.get());
+		count++;
 	}
+	#ifdef USE_SPARSEHASH
+	dense_hash_set<Triangle*> used(count);
+	used.set_empty_key(NULL);
+	#else
 	unordered_set<Triangle*> used;
+	used.reserve(count);
+	#endif
 	
 	list<Triangle*> strip;
 	//map<uint32_t,uint32_t> striplengths;
 	time_t nextUpdate = time(NULL) + 1;
 	printf("Writing strips:\n");
 	while (!queue.empty()) {
-		if (used.find(queue.front()) != used.end()) {
-			queue.pop_front();
-			continue;
-		}
-		Triangle* prev = queue.front();
-		queue.pop_front();
-		strip.push_back(prev);
-		used.insert(prev);
-		
 		if (time(NULL) > nextUpdate) {
 			/*printf("queued=%lu ", queue.size());
 			for (auto& i : striplengths) {
@@ -39,9 +43,17 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 			printf("\r");
 			nextUpdate++;
 		}
+		if (used.find(queue.front()) != used.end()) {
+			queue.pop_front();
+			continue;
+		}
+		Triangle* prev = queue.front();
+		queue.pop_front();
+		strip.push_back(prev);
+		used.insert(prev);
 
 		bool keepgoing;
-		uint32_t count = 1;
+		count = 1;
 		for (int o = 0; o < 2; o++) {
 			do {
 				next:

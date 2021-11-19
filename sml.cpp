@@ -3,8 +3,6 @@
 #include <time.h>
 #include <assert.h>
 #include <filesystem>
-#include <map>
-#include <unordered_set>
 #include "mesh.h"
 #include "sml.h"
 using namespace std;

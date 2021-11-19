@@ -5,7 +5,11 @@
 #include <math.h>
 #include <list>
 #include <vector>
+#ifdef USE_SPARSEHASH
+#include <sparsehash/dense_hash_map>
+#else
 #include <unordered_map>
+#endif
 
 struct Mesh;
 
@@ -67,8 +71,8 @@ public:
 class VertexPtrHash {
 public:
 	size_t operator()(const std::shared_ptr<Vertex> v) const {
-		return std::hash<float>()(v->x)
-			^ std::hash<float>()(v->y)
+		return (std::hash<float>()(v->x) << 2)
+			^ (std::hash<float>()(v->y) << 1)
 			^ std::hash<float>()(v->z);
 	}
 };
@@ -190,12 +194,20 @@ public:
 	std::vector<std::string> comments;
 	
 	SpatialMap spatialMap;
+	#ifdef USE_SPARSEHASH
+	google::dense_hash_map<std::shared_ptr<Vertex>,size_t,VertexPtrHash,VertexPtrEquals> lookup;
+	#else
 	std::unordered_map<std::shared_ptr<Vertex>,size_t,VertexPtrHash,VertexPtrEquals> lookup;
+	#endif
 	
 	Mesh() {
 		minX = minY = minZ = std::numeric_limits<float>::max();
 		maxX = maxY = maxZ = -std::numeric_limits<float>::max();
 		spatialMap.init(this);
+		
+		#ifdef USE_SPARSEHASH
+		lookup.set_empty_key(std::make_shared<Vertex>(NULL));
+		#endif
 	}
 	inline void add(std::shared_ptr<Vertex> V) {
 		if (V->x < minX) minX = V->x;
