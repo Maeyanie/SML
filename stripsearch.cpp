@@ -16,13 +16,13 @@ using namespace std;
 
 void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>& strips) {
 	list<Triangle*> queue;
-	uint32_t count = 0;
+	uint32_t queueSize = 0;
 	for (auto& i : mesh->t) {
 		queue.push_back(i.get());
-		count++;
+		queueSize++;
 	}
 	#ifdef USE_SPARSEHASH
-	dense_hash_set<Triangle*> used(count);
+	dense_hash_set<Triangle*> used(queueSize);
 	used.set_empty_key(NULL);
 	#else
 	unordered_set<Triangle*> used;
@@ -39,36 +39,37 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 			for (auto& i : striplengths) {
 				printf("%u=%u ", i.first, i.second);
 			}*/
-			printf("%lu ", queue.size());
+			printf("%lu ", queueSize);
 			fflush(stdout);
 			printf("\r");
-			nextUpdate++;
+			nextUpdate = time(NULL) + 1;
 		}
 		if (used.find(queue.front()) != used.end()) {
 			queue.pop_front();
+			queueSize--;
 			continue;
 		}
 		Triangle* prev = queue.front();
 		queue.pop_front();
+		queueSize--;
 		strip.push_back(prev);
 		used.insert(prev);
 
 		bool keepgoing;
-		count = 1;
+		bool found;
+		uint32_t count = 1;
 		for (int o = 0; o < 2; o++) {
 			do {
-				next:
+				//next:
 				keepgoing = false;
+				found = false;
 				/* count=0  0 1 2
 				   count=1  0 2 3  a==a, b==c
 				   count=2	3 2 4  a==c, b==b */
 				   
 				if (count & 1) {
 					list<vector<uint32_t>*> near = mesh->spatialMap.getNear(*mesh->v[prev->b]);
-					{
-						auto n = mesh->spatialMap.getNear(*mesh->v[prev->c]);
-						near.splice(near.end(), n);
-					}
+					near.splice(near.end(), mesh->spatialMap.getNear(*mesh->v[prev->c]));
 					
 					for (auto list : near) {
 						for (auto j : *list) {
@@ -97,15 +98,15 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 							prev = cur;
 							keepgoing = true;
 							count++;
-							goto next;
+							//goto next;
+							found = true;
+							break;
 						}
+						if (found) break;
 					}
 				} else {
 					list<vector<uint32_t>*> near = mesh->spatialMap.getNear(*mesh->v[prev->a]);
-					{
-						auto n = mesh->spatialMap.getNear(*mesh->v[prev->c]);
-						near.splice(near.end(), n);
-					}
+					near.splice(near.end(), mesh->spatialMap.getNear(*mesh->v[prev->c]));
 					
 					for (auto list : near) {
 						for (auto j : *list) {
@@ -135,8 +136,11 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 							prev = cur;
 							keepgoing = true;
 							count++;
-							goto next;
+							//goto next;
+							found = true;
+							break;
 						}
+						if (found) break;
 					}
 				}
 			} while (keepgoing);
