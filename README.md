@@ -8,3 +8,11 @@ drops support for parts of the formats unimportant for 3D printing, and adds the
 It is also extensible for future use.
 
 With the reference converters, the created SML files are approximately 1/4 of the original size of the STL with zero loss in quality.
+
+
+# Software Support
+Aside from the reference converters, the following software supports SML:
+
+PrusaSlicer via a forked version: https://github.com/Maeyanie/PrusaSlicer
+
+Cura via a plugin: https://github.com/Maeyanie/SMLReaderPlugin
