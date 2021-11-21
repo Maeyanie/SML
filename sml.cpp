@@ -170,7 +170,7 @@ void writeSML(filesystem::path file, Mesh* mesh, uint32_t flags) {
 	uint8_t type;
 	
 	if (!mesh->comments.empty()) {
-		printf("Writing %u commment%s...", (uint32_t)mesh->comments.size(), mesh->comments.size() == 1 ? "" : "s");
+		printf("Writing %u comment%s...", (uint32_t)mesh->comments.size(), mesh->comments.size() == 1 ? "" : "s");
 		fflush(stdout);
 		type = 0;
 		for (auto& str : mesh->comments) {
@@ -212,6 +212,8 @@ void writeSML(filesystem::path file, Mesh* mesh, uint32_t flags) {
 				stripsearch_exhaustive(mesh, singles, strips);
 			}
 			
+			printf("Writing %u strips...", strips.size());
+			fflush(stdout);
 			for (auto& strip : strips) {
 				type = 5;
 				fwrite(&type, 1, 1, fp);
@@ -229,6 +231,7 @@ void writeSML(filesystem::path file, Mesh* mesh, uint32_t flags) {
 					fwrite(&(i->c), 4, 1, fp);
 				}
 			}
+			printf("Done.\n");
 			
 			size_t triCount = singles.size();
 			assert(triCount <= 357913941);

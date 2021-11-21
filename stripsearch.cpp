@@ -32,7 +32,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 	list<Triangle*> strip;
 	//map<uint32_t,uint32_t> striplengths;
 	time_t nextUpdate = time(NULL) + 1;
-	printf("Writing strips:\n");
+	printf("Finding strips:\n");
 	while (!queue.empty()) {
 		if (time(NULL) > nextUpdate) {
 			/*printf("queued=%lu ", queue.size());
@@ -181,7 +181,7 @@ void stripsearch_next(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>
 	list<Triangle*> strip;
 	//map<uint32_t,uint32_t> striplengths;
 	time_t nextUpdate = time(NULL) + 1;
-	printf("Writing strips:\n");
+	printf("Finding strips:\n");
 	while (!queue.empty()) {
 		Triangle* prev = queue.front();
 		queue.pop_front();
@@ -304,7 +304,7 @@ void stripsearch_exhaustive(Mesh* mesh, list<Triangle*>& singles, list<list<Tria
 	list<Triangle*> strip;
 	//map<uint32_t,uint32_t> striplengths;
 	time_t nextUpdate = time(NULL) + 1;
-	printf("Writing strips:\n");
+	printf("Finding strips:\n");
 	while (!queue.empty()) {
 		Triangle* prev = queue.front();
 		queue.pop_front();
