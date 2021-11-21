@@ -26,7 +26,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 	used.set_empty_key(NULL);
 	#else
 	unordered_set<Triangle*> used;
-	used.reserve(count);
+	used.reserve(queueSize);
 	#endif
 	
 	list<Triangle*> strip;
