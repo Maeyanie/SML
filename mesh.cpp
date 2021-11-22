@@ -99,6 +99,15 @@ list<vector<uint32_t>*> SpatialMap::getNear(Vertex& v) {
 }
 
 void SpatialMap::build() {
+	if (!map) {
+		size_t verts = mesh->v.size();
+		// unordered_map supposedly defaults to load factor of 1, but vertices aren't evenly distributed.
+		mapSize = cbrt(verts*4);
+		printf("Using size %lu for %lu vertices...", (unsigned long)mapSize, (unsigned long)verts);
+		fflush(stdout);
+		map = new std::vector<uint32_t>[mapSize*mapSize*mapSize];
+	}
+	
 	uint32_t i = 0;
 	for (auto& t : mesh->t) {
 		for (uint32_t iv : t->v) {

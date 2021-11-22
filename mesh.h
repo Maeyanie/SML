@@ -168,7 +168,12 @@ public:
 		if (map) delete[] map;
 	}
 	
-	void init(Mesh* m, uint32_t size = 128) {
+	void init(Mesh* m) {
+		mesh = m;
+		mapSize = 0;
+		map = NULL;
+	}
+	void init(Mesh* m, uint32_t size) {
 		mesh = m;
 		mapSize = size;
 		if (map) delete[] map;
