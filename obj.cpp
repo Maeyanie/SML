@@ -51,11 +51,12 @@ Mesh* readOBJ(std::filesystem::path file) {
 			char* c;
 			while ((c = strtok(NULL, " \r\n"))) {
 				int i = atoi(c);
-				if (i <= 0) {
-					// TODO: Implement negative vertices.
-					fprintf(stderr, "Unsupported OBJ file: Invalid vertex index %d (%s)\n", i, c);
+				if (i == 0) {
+					fprintf(stderr, "Unsupported OBJ file: Invalid vertex index '%s'\n", c);
 					exit(__LINE__);
 				}
+				if (i < 0) i += mesh->v.size();
+				else i--;
 				vertices.push_back(i);
 			}
 
