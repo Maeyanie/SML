@@ -72,9 +72,13 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 					near.splice(near.end(), mesh->spatialMap.getNear(*mesh->v[prev->c]));
 					
 					for (auto list : near) {
-						for (auto j : *list) {
-							Triangle* cur = mesh->t[j].get();
-							if (used.find(cur) != used.end()) continue;
+						for (auto j = list->begin(); j != list->end(); ++j) {
+							if (*j == 0xFFFFFFFF) continue;
+							Triangle* cur = mesh->t[*j].get();
+							if (used.find(cur) != used.end()) {
+								*j = 0xFFFFFFFF;
+								continue;
+							}
 							
 							if (cur->a == prev->a && cur->b == prev->c) {
 								// Everything looks good from here. (abc)
@@ -93,6 +97,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 							} else {
 								continue;
 							}
+							*j = 0xFFFFFFFF;
 							used.insert(cur);
 							strip.push_back(cur);
 							prev = cur;
@@ -109,9 +114,13 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 					near.splice(near.end(), mesh->spatialMap.getNear(*mesh->v[prev->c]));
 					
 					for (auto list : near) {
-						for (auto j : *list) {
-							Triangle* cur = mesh->t[j].get();
-							if (used.find(cur) != used.end()) continue;
+						for (auto j = list->begin(); j != list->end(); ++j) {
+							if (*j == 0xFFFFFFFF) continue;
+							Triangle* cur = mesh->t[*j].get();
+							if (used.find(cur) != used.end()) {
+								*j = 0xFFFFFFFF;
+								continue;
+							}
 							
 							if (cur->a == prev->c && cur->b == prev->b) {
 								// Yes, this is a fertile land. (abc)
@@ -131,6 +140,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 								//if (fails++ > 10000) break;
 								continue;
 							}
+							*j = 0xFFFFFFFF;
 							used.insert(cur);
 							strip.push_back(cur);
 							prev = cur;
