@@ -11,12 +11,16 @@ Mesh* readSML(std::filesystem::path file) {
 	Mesh* mesh = new Mesh();
 	
 	#ifdef _WIN32
+		printf("Reading %ls...\n", file.c_str());
+		fflush(stdout);
 		FILE* fp = _wfopen(file.c_str(), L"rb");
 		if (!fp) {
 			fprintf(stderr, "Could not open SML file '%ls' for reading: %s\n", file.c_str(), strerror(errno));
 			exit(__LINE__);
 		}
 	#else
+		printf("Reading %s...\n", file.c_str());
+		fflush(stdout);
 		FILE* fp = fopen(file.c_str(), "r");
 		if (!fp) {
 			fprintf(stderr, "Could not open SML file '%s' for reading: %m\n", file.c_str());
@@ -51,13 +55,22 @@ Mesh* readSML(std::filesystem::path file) {
 	}
 
 
+	#ifdef _MSC_VER
+	#pragma pack(push, 1)
+	struct {
+		uint8_t type;
+		uint32_t length;
+	} header;
+	#pragma pack(pop)
+	#else
 	struct __attribute__((packed)) {
 		uint8_t type;
 		uint32_t length;
 	} header;
+	#endif
 	while (fread(&header, 5, 1, fp) == 1) {
-		printf("Reading segment, type %hhu, length %u...", header.type, header.length);
-		fflush(stdout);
+		//printf("Reading segment, type %hhu, length %u...", header.type, header.length);
+		//fflush(stdout);
 		
 		switch (header.type) {
 			case 0: {
@@ -130,8 +143,9 @@ Mesh* readSML(std::filesystem::path file) {
 				fprintf(stderr, "Error: Unrecognized segment type '%hhu'\n", header.type);
 				exit(__LINE__);
 		}
-		printf("Done.\n");
+		//printf("Done.\n");
 	}
+	printf("Done.\n");
 	return mesh;
 }
 

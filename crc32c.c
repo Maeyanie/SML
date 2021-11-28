@@ -81,11 +81,17 @@ static uint32_t crc32c_shift(uint32_t const zeros[][256], uint32_t crc) {
            zeros[2][(crc >> 16) & 0xff] ^ zeros[3][crc >> 24];
 }
 
+#ifdef _MSC_VER
+uint32_t crc32c(uint32_t crc, void const *buf, size_t len) {
+	return crc32c_sw(crc, buf, len);
+}
+#else
 // Compute CRC-32C using the Intel hardware instruction. Three crc32q
 // instructions are run in parallel on a single core. This gives a
 // factor-of-three speedup over a single crc32q instruction, since the
 // throughput of that instruction is one cycle, but the latency is three
 // cycles.
+
 uint32_t crc32c_hw(uint32_t crc, void const *buf, size_t len) {
     if (buf == NULL)
         return 0;
@@ -191,3 +197,4 @@ uint32_t crc32c(uint32_t crc, void const *buf, size_t len) {
     SSE42(sse42);
     return sse42 ? crc32c_hw(crc, buf, len) : crc32c_sw(crc, buf, len);
 }
+#endif

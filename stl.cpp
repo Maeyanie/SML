@@ -60,12 +60,16 @@ Mesh* readSTL(filesystem::path file) {
 
 void writeSTL(filesystem::path file, Mesh* mesh) {
 	#ifdef _WIN32
+		printf("Writing %ls...", file.c_str());
+		fflush(stdout);
 		FILE* fp = _wfopen(file.c_str(), L"wb+");
 		if (!fp) {
 			fprintf(stderr, "Could not open STL file '%ls' for writing: %s\n", file.c_str(), strerror(errno));
 			exit(__LINE__);
 		}
 	#else
+		printf("Writing %s...", file.c_str());
+		fflush(stdout);
 		FILE* fp = fopen(file.c_str(), "w+");
 		if (!fp) {
 			fprintf(stderr, "Could not open STL file '%s' for writing: %m\n", file.c_str());
@@ -105,5 +109,6 @@ void writeSTL(filesystem::path file, Mesh* mesh) {
 	}
 	
 	fclose(fp);
+	printf("Done.\n");
 }
 

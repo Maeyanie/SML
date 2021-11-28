@@ -12,7 +12,7 @@
 #include <unordered_map>
 #endif
 
-struct Mesh;
+class Mesh;
 
 #include "stl.h"
 

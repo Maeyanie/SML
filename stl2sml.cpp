@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <getopt.h>
 #include <assert.h>
 
 #include <iostream>
@@ -15,6 +14,8 @@
 
 using namespace std;
 
+#ifndef _MSC_VER
+#include <getopt.h>
 
 static const struct option longopts[] = {
 	{"comment",		required_argument,	0,	'c'},
@@ -22,10 +23,15 @@ static const struct option longopts[] = {
 	{"help",		no_argument,		0,	'h'},
 	{0, 0, 0, 0}
 };
+#endif
 
 int main(int argc, char* argv[]) {
 	uint32_t writeflags = 0;
 	vector<string> comments;
+
+	#ifdef _MSC_VER
+	int optind = 1;
+	#else
 	
 	while (1) {
 		int option_index = 0;
@@ -61,6 +67,7 @@ int main(int argc, char* argv[]) {
 				return 1;
 		}
 	}
+	#endif
 	
 	for (int i = optind; i < argc; i++) {
 		filesystem::path file(argv[i]);
