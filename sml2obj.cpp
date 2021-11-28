@@ -5,7 +5,6 @@
 #include <fstream>
 #include <list>
 #include <vector>
-#include <filesystem>
 
 #include "mesh.h"
 #include "obj.h"

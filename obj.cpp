@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <assert.h>
-#include <filesystem>
+
 #include "mesh.h"
 #include "obj.h"
 using namespace std;

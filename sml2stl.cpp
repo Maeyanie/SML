@@ -6,7 +6,6 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
-#include <filesystem>
 
 #include "mesh.h"
 #include "stl.h"

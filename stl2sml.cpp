@@ -6,8 +6,8 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
-#include <filesystem>
 
+#include "config.h"
 #include "mesh.h"
 #include "stl.h"
 #include "sml.h"

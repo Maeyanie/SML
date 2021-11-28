@@ -5,8 +5,8 @@
 #include <fstream>
 #include <list>
 #include <vector>
-#include <filesystem>
 
+#include "config.h"
 #include "mesh.h"
 #include "obj.h"
 #include "sml.h"

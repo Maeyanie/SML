@@ -1,7 +1,7 @@
 #ifndef STL_H
 #define STL_H
 
-#include <filesystem>
+#include "config.h"
 
 #ifdef _MSC_VER
 #pragma pack(push, 1)

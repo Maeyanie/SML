@@ -39,7 +39,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 			for (auto& i : striplengths) {
 				printf("%u=%u ", i.first, i.second);
 			}*/
-			printf("%lu ", queueSize);
+			printf("%lu ", (unsigned long)queueSize);
 			fflush(stdout);
 			printf("\r");
 			nextUpdate = time(NULL) + 1;

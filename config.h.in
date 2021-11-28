@@ -2,5 +2,16 @@
 #define CONFIG_H
 
 #cmakedefine USE_SPARSEHASH
+#cmakedefine HAVE_FS
+#cmakedefine HAVE_EXPFS
+
+#if defined(HAVE_FS)
+#include <filesystem>
+#elif defined(HAVE_EXPFS)
+#include <experimental/filesystem>
+namespace std {
+	namespace filesystem = std::experimental::filesystem;
+}
+#endif
 
 #endif

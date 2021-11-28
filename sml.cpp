@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <assert.h>
-#include <filesystem>
+
 #include "mesh.h"
 #include "sml.h"
 using namespace std;
@@ -226,7 +226,7 @@ void writeSML(filesystem::path file, Mesh* mesh, uint32_t flags) {
 				stripsearch_exhaustive(mesh, singles, strips);
 			}
 			
-			printf("Writing %u strips...", strips.size());
+			printf("Writing %u strips...", (unsigned int)strips.size());
 			fflush(stdout);
 			for (auto& strip : strips) {
 				type = 5;

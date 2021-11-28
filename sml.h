@@ -1,7 +1,7 @@
 #ifndef SML_H
 #define SML_H
 
-#include <filesystem>
+#include "config.h"
 #include "mesh.h"
 
 extern "C" {
