@@ -16,3 +16,7 @@ Aside from the reference converters, the following software supports SML:
 PrusaSlicer via a forked version: https://github.com/Maeyanie/PrusaSlicer
 
 Cura via a plugin: https://github.com/Maeyanie/SMLReaderPlugin
+
+fsml (a fast SML viewer based on fstl): https://github.com/Maeyanie/fsml
+
+SMLThumbnail (Windows Explorer SML thumbnails): https://github.com/Maeyanie/SMLThumbnails
