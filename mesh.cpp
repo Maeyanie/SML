@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include <algorithm>
 using namespace std;
 
 static inline uint32_t findVertex(Mesh* mesh, shared_ptr<Vertex> v) {
@@ -102,10 +103,13 @@ void SpatialMap::build() {
 	if (!map) {
 		size_t verts = mesh->v.size();
 		// unordered_map supposedly defaults to load factor of 1, but vertices aren't evenly distributed.
-		mapSize = cbrt(verts*4);
+		//mapSize = ceil(cbrt(verts*4));
+		// Cube root wasn't aggressive enough on very high triangle counts, let's try square root.
+		mapSize = ceil(sqrt(verts)) / 4;
+		if (mapSize < 2) mapSize = 2;
 		printf("Using size %lu for %lu vertices...", (unsigned long)mapSize, (unsigned long)verts);
 		fflush(stdout);
-		map = new std::vector<uint32_t>[mapSize*mapSize*mapSize];
+		map = new vector<uint32_t>[mapSize*mapSize*mapSize];
 	}
 	
 	uint32_t i = 0;
@@ -115,6 +119,16 @@ void SpatialMap::build() {
 			map[pos].push_back(i);
 		}
 		i++;
+	}
+}
+
+void SpatialMap::compact() {
+	for (int i = 0; i < (mapSize*mapSize*mapSize); i++) {
+		if (map[i].empty()) continue;
+		vector<uint32_t> copied;
+		copied.reserve(map[i].size());
+		remove_copy(map[i].begin(), map[i].end(), copied.begin(), 0xFFFFFFFF);
+		map[i].swap(copied);
 	}
 }
 

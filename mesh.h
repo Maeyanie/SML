@@ -148,12 +148,12 @@ public:
 class Mesh;
 
 class SpatialMap {
-protected:
+public:
 	Mesh* mesh;
 	std::vector<uint32_t>* map;
 	uint32_t mapSize;
 
-public:
+
 	SpatialMap() {
 		mesh = NULL;
 		mapSize = 0;
@@ -182,6 +182,7 @@ public:
 	
 	
 	void build();
+	void compact();
 	size_t getPos(Vertex& v);
 	std::vector<uint32_t>* get(size_t pos) {
 		return &(map[pos]);

@@ -29,6 +29,8 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 	used.reserve(queueSize);
 	#endif
 	
+	const uint32_t mapSize = mesh->spatialMap.mapSize;
+	uint32_t dirtiness = 0;
 	list<Triangle*> strip;
 	//map<uint32_t,uint32_t> striplengths;
 	time_t nextUpdate = time(NULL) + 1;
@@ -44,6 +46,10 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 			printf("\r");
 			nextUpdate = time(NULL) + 1;
 		}
+		if (dirtiness >= (mapSize*mapSize*mapSize)) {
+			mesh->spatialMap.compact();
+			dirtiness = 0;
+		}
 		if (used.find(queue.front()) != used.end()) {
 			queue.pop_front();
 			queueSize--;
@@ -54,7 +60,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 		queueSize--;
 		strip.push_back(prev);
 		used.insert(prev);
-
+		
 		bool keepgoing;
 		bool found;
 		uint32_t count = 1;
@@ -77,6 +83,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 							Triangle* cur = mesh->t[*j].get();
 							if (used.find(cur) != used.end()) {
 								*j = 0xFFFFFFFF;
+								dirtiness++;
 								continue;
 							}
 							
@@ -98,6 +105,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 								continue;
 							}
 							*j = 0xFFFFFFFF;
+							dirtiness++;
 							used.insert(cur);
 							strip.push_back(cur);
 							prev = cur;
@@ -119,6 +127,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 							Triangle* cur = mesh->t[*j].get();
 							if (used.find(cur) != used.end()) {
 								*j = 0xFFFFFFFF;
+								dirtiness++;
 								continue;
 							}
 							
@@ -141,6 +150,7 @@ void stripsearch_map(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>
 								continue;
 							}
 							*j = 0xFFFFFFFF;
+							dirtiness++;
 							used.insert(cur);
 							strip.push_back(cur);
 							prev = cur;

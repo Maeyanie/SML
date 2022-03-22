@@ -20,6 +20,7 @@ using namespace std;
 static const struct option longopts[] = {
 	{"comment",		required_argument,	0,	'c'},
 	{"strip",		optional_argument,	0,	's'},
+	{"rm",			no_argument,		0,   1 },
 	{"help",		no_argument,		0,	'h'},
 	{0, 0, 0, 0}
 };
@@ -28,6 +29,7 @@ static const struct option longopts[] = {
 int main(int argc, char* argv[]) {
 	uint32_t writeflags = 0;
 	vector<string> comments;
+	bool rm = 0;
 
 	#ifdef _MSC_VER
 	int optind = 1;
@@ -53,6 +55,10 @@ int main(int argc, char* argv[]) {
 				}
 			} break;
 			
+			case 1:
+				rm = 1;
+				break;
+			
 			case 'h':
 				printf("Usage: %s [options] <file.stl>...\n"
 					"Options:\n"
@@ -63,6 +69,7 @@ int main(int argc, char* argv[]) {
 					"                               map: The default, uses a spatial map to check nearby triangles.\n"
 					"                               next: Checks the next 1000 triangles in the source file.\n"
 					"                               all: Does an exhaustive scan of all triangles. Very slow.\n"
+					"--rm                         Remove original file after converting.\n"
 					, argv[0]);
 				return 1;
 		}
@@ -79,6 +86,7 @@ int main(int argc, char* argv[]) {
 		writeSML(file, mesh, writeflags);
 		
 		delete mesh;
+		if (rm) filesystem::remove(argv[i]);
 		printf("\n");
 	}
 	
