@@ -119,6 +119,20 @@ public:
 	bool write(FILE* fp) {
 		return fwrite(v, 4, 3, fp) == 3;
 	}
+	
+	void rotate(int dir) {
+		if (dir > 0) {
+			uint32_t temp = a;
+			a = b;
+			b = c;
+			c = temp;
+		} else if (dir < 0) {
+			uint32_t temp = c;
+			c = b;
+			b = a;
+			a = temp;
+		}
+	}
 };
 class Quad {
 public:

@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 					if (!strcasecmp(optarg, "all")) writeflags = SMLFlags::STRIP_EXHAUSTIVE;
 					if (!strcasecmp(optarg, "link")) writeflags = SMLFlags::STRIP_LINK;
 				} else {
-					writeflags = SMLFlags::STRIP_LINK;
+					writeflags = SMLFlags::STRIP_MAP;
 				}
 			} break;
 			
