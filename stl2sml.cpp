@@ -51,9 +51,6 @@ int main(int argc, char* argv[]) {
 					if (!strcasecmp(optarg, "next")) writeflags = SMLFlags::STRIP_NEXT;
 					if (!strcasecmp(optarg, "all")) writeflags = SMLFlags::STRIP_EXHAUSTIVE;
 					if (!strcasecmp(optarg, "link")) writeflags = SMLFlags::STRIP_LINK;
-					#ifdef USE_BOOST
-					if (!strcasecmp(optarg, "boost")) writeflags = SMLFlags::STRIP_BOOST;
-					#endif
 				} else {
 					writeflags = SMLFlags::STRIP_LINK;
 				}
