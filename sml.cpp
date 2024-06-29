@@ -224,6 +224,12 @@ void writeSML(filesystem::path file, Mesh* mesh, uint32_t flags) {
 				stripsearch_next(mesh, singles, strips);
 			} else if (flags & SMLFlags::STRIP_EXHAUSTIVE) {
 				stripsearch_exhaustive(mesh, singles, strips);
+			} else if (flags & SMLFlags::STRIP_LINK) {
+				stripsearch_link(mesh, singles, strips);
+			#ifdef USE_BOOST
+			} else if (flags & SMLFlags::STRIP_BOOST) {
+				stripsearch_boost(mesh, singles, strips);
+			#endif
 			}
 			
 			printf("Writing %u strips...", (unsigned int)strips.size());

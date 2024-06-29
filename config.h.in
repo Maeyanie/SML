@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #cmakedefine USE_SPARSEHASH
+#cmakedefine USE_BOOST
 #cmakedefine HAVE_FS
 #cmakedefine HAVE_EXPFS
 

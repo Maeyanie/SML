@@ -13,6 +13,11 @@ if(SPARSEHASH_FOUND)
 	option(USE_SPARSEHASH "Use Google Sparsehash" ON)
 endif()
 
+find_package(Boost)
+if(Boost_FOUND)
+	option(USE_BOOST "Use Boost Spatial Index" ON)
+endif()
+
 set_property(GLOBAL PROPERTY FSLIB "")
 check_include_file_cxx("filesystem" HAVE_FS)
 if(HAVE_FS)

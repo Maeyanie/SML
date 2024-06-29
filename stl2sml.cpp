@@ -50,8 +50,12 @@ int main(int argc, char* argv[]) {
 					if (!strcasecmp(optarg, "map")) writeflags = SMLFlags::STRIP_MAP;
 					if (!strcasecmp(optarg, "next")) writeflags = SMLFlags::STRIP_NEXT;
 					if (!strcasecmp(optarg, "all")) writeflags = SMLFlags::STRIP_EXHAUSTIVE;
+					if (!strcasecmp(optarg, "link")) writeflags = SMLFlags::STRIP_LINK;
+					#ifdef USE_BOOST
+					if (!strcasecmp(optarg, "boost")) writeflags = SMLFlags::STRIP_BOOST;
+					#endif
 				} else {
-					writeflags = SMLFlags::STRIP_MAP;
+					writeflags = SMLFlags::STRIP_LINK;
 				}
 			} break;
 			
@@ -64,11 +68,7 @@ int main(int argc, char* argv[]) {
 					"Options:\n"
 					"-c=<...> --comment=<...>     Add the specified text to the resulting SML file as a comment.\n"
 					"                             Can be used more than once for multiple comments.\n"
-					"-s[=mode] --strip[=mode]     Attempt to find triangle strips in the model.\n"
-					"                             Mode can be one of: map (default), next, all\n"
-					"                               map: The default, uses a spatial map to check nearby triangles.\n"
-					"                               next: Checks the next 1000 triangles in the source file.\n"
-					"                               all: Does an exhaustive scan of all triangles. Very slow.\n"
+					"-s --strip                   Attempt to find triangle strips in the model.\n"
 					"--rm                         Remove original file after converting.\n"
 					, argv[0]);
 				return 1;

@@ -104,9 +104,15 @@ void SpatialMap::build() {
 		size_t verts = mesh->v.size();
 		// unordered_map supposedly defaults to load factor of 1, but vertices aren't evenly distributed.
 		//mapSize = ceil(cbrt(verts*4));
+		
 		// Cube root wasn't aggressive enough on very high triangle counts, let's try square root.
 		mapSize = ceil(sqrt(verts)) / 4;
-		if (mapSize < 2) mapSize = 2;
+		
+		
+		// Ideally this should be based on memory, command-line configurable, or both.
+		if (mapSize > 1024) mapSize = 1024;
+		else if (mapSize < 2) mapSize = 2;
+		
 		printf("Using size %lu for %lu vertices...", (unsigned long)mapSize, (unsigned long)verts);
 		fflush(stdout);
 		map = new vector<uint32_t>[mapSize*mapSize*mapSize];
@@ -125,10 +131,16 @@ void SpatialMap::build() {
 void SpatialMap::compact() {
 	for (int i = 0; i < (mapSize*mapSize*mapSize); i++) {
 		if (map[i].empty()) continue;
-		vector<uint32_t> copied;
+		/*vector<uint32_t> copied;
 		copied.reserve(map[i].size());
-		remove_copy(map[i].begin(), map[i].end(), copied.begin(), 0xFFFFFFFF);
-		map[i].swap(copied);
+		//remove_copy(map[i].begin(), map[i].end(), copied.begin(), 0xFFFFFFFF);
+		for (auto i : map[i]) {
+			if (i != 0xFFFFFFFF)
+				copied.push_back(i);
+		}
+		map[i].swap(copied);*/
+		// std::erase(map[i], 0xFFFFFFFF); -- C++20
+		remove(map[i].begin(), map[i].end(), 0xFFFFFFFF);
 	}
 }
 
