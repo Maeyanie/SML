@@ -11,11 +11,11 @@ static inline uint32_t findVertex(Mesh* mesh, shared_ptr<Vertex> v) {
 	/* This is very slow and didn't seem to appreciably help anyhow.
 	for (size_t index = 0; index < mesh->v.size(); index++) {
 		if (v->closeTo(mesh->v[index].get())) {
-			mesh->lookup.insert({v, index});
+			mesh->lookup.emplace(v, index);
 			return index;
 		}
-	}*/
-	
+	}
+	*/
 
 	uint32_t ret = mesh->v.size();
 	mesh->add(v);
