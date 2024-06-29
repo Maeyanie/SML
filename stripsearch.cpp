@@ -516,82 +516,78 @@ void stripsearch_link(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>
 				   count=2	3 2 4  a==c, b==b */
 				   
 				if (count & 1) {
-					list<TriVector*> near;
+					list<Triangle*> near;
 					auto li = links.find(prev->b);
-					if (li != links.end()) near.push_back(li->second);
+					if (li != links.end()) near.insert(near.end(), li->second->begin(), li->second->end());
 					li = links.find(prev->c);
-					if (li != links.end()) near.push_back(li->second);
+					if (li != links.end()) near.insert(near.end(), li->second->begin(), li->second->end());
 					
-					for (auto list : near) {
-						for (Triangle* cur : *list) {
-							if (used.find(cur) != used.end()) continue;
-							
-							if (cur->a == prev->a && cur->b == prev->c) {
-								// Everything looks good from here. (abc)
-							} else if (cur->b == prev->a && cur->c == prev->c) {
-								// Rotated +1 (a=b, b=c, c=a)
-								uint32_t temp = cur->a;
-								cur->a = cur->b;
-								cur->b = cur->c;
-								cur->c = temp;
-							} else if (cur->c == prev->a && cur->a == prev->c) {
-								// Rotated -1 (a=c, b=a, c=b)
-								uint32_t temp = cur->c;
-								cur->c = cur->b;
-								cur->b = cur->a;
-								cur->a = temp;
-							} else {
-								continue;
-							}
-							used.insert(cur);
-							strip.push_back(cur);
-							prev = cur;
-							keepgoing = true;
-							count++;
-							found = true;
-							break;
+					for (Triangle* cur : near) {
+						if (used.find(cur) != used.end()) continue;
+						
+						if (cur->a == prev->a && cur->b == prev->c) {
+							// Everything looks good from here. (abc)
+						} else if (cur->b == prev->a && cur->c == prev->c) {
+							// Rotated +1 (a=b, b=c, c=a)
+							uint32_t temp = cur->a;
+							cur->a = cur->b;
+							cur->b = cur->c;
+							cur->c = temp;
+						} else if (cur->c == prev->a && cur->a == prev->c) {
+							// Rotated -1 (a=c, b=a, c=b)
+							uint32_t temp = cur->c;
+							cur->c = cur->b;
+							cur->b = cur->a;
+							cur->a = temp;
+						} else {
+							continue;
 						}
-						if (found) break;
+						used.insert(cur);
+						strip.push_back(cur);
+						prev = cur;
+						keepgoing = true;
+						count++;
+						found = true;
+						break;
 					}
+					if (found) break;
 				} else {
-					list<TriVector*> near;
+					list<Triangle*> near;
 					auto li = links.find(prev->a);
-					if (li != links.end()) near.push_back(li->second);
+					if (li != links.end()) near.insert(near.end(), li->second->begin(), li->second->end());
 					li = links.find(prev->c);
-					if (li != links.end()) near.push_back(li->second);
+					if (li != links.end()) near.insert(near.end(), li->second->begin(), li->second->end());
 					
-					for (auto list : near) {
-						for (Triangle* cur : *list) {
-							if (used.find(cur) != used.end()) continue;
-							
-							if (cur->a == prev->c && cur->b == prev->b) {
-								// Yes, this is a fertile land. (abc)
-							} else if (cur->b == prev->c && cur->c == prev->b) {
-								// Rotated +1 (a=b, b=c, c=a)
-								uint32_t temp = cur->a;
-								cur->a = cur->b;
-								cur->b = cur->c;
-								cur->c = temp;
-							} else if (cur->c == prev->c && cur->a == prev->b) {
-								// Rotated -1 (a=c, b=a, c=b)
-								uint32_t temp = cur->c;
-								cur->c = cur->b;
-								cur->b = cur->a;
-								cur->a = temp;
-							} else {
-								//if (fails++ > 10000) break;
-								continue;
-							}
-							used.insert(cur);
-							strip.push_back(cur);
-							prev = cur;
-							keepgoing = true;
-							count++;
-							found = true;
-							break;
+					for (Triangle* cur : near) {
+						if (used.find(cur) != used.end()) continue;
+						
+						if (cur->a == prev->c && cur->b == prev->b) {
+							// Yes, this is a fertile land. (abc)
+						} else if (cur->b == prev->c && cur->c == prev->b) {
+							// Rotated +1 (a=b, b=c, c=a)
+							uint32_t temp = cur->a;
+							cur->a = cur->b;
+							cur->b = cur->c;
+							cur->c = temp;
+						} else if (cur->c == prev->c && cur->a == prev->b) {
+							// Rotated -1 (a=c, b=a, c=b)
+							uint32_t temp = cur->c;
+							cur->c = cur->b;
+							cur->b = cur->a;
+							cur->a = temp;
+						} else {
+							//if (fails++ > 10000) break;
+							continue;
 						}
-						if (found) break;
+						used.insert(cur);
+						strip.push_back(cur);
+						prev = cur;
+						keepgoing = true;
+						count++;
+						found = true;
+						break;
 					}
+					if (found) break;
 				}
 			} while (keepgoing);
 			
