@@ -3,7 +3,7 @@
 #include <list>
 #include <map>
 #ifdef USE_SPARSEHASH
-#include <sparsehash/dense_hash_map>
+#include <sparsehash/sparse_hash_map>
 #include <sparsehash/dense_hash_set>
 using namespace google;
 #else
@@ -448,8 +448,8 @@ typedef vector<Triangle*> TriVector;
 
 void stripsearch_link(Mesh* mesh, list<Triangle*>& singles, list<list<Triangle*>>& strips) {
 	#ifdef USE_SPARSEHASH
-	dense_hash_map<uint32_t, TriVector*> links;
-	links.set_empty_key(0xFFFFFFFF);
+	sparse_hash_map<uint32_t, TriVector*> links;
+	//links.set_empty_key(0xFFFFFFFF);
 	#else
 	unordered_map<uint32_t, TriVector*> links;
 	#endif
