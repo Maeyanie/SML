@@ -119,6 +119,32 @@ public:
 	bool write(FILE* fp) {
 		return fwrite(v, 4, 3, fp) == 3;
 	}
+	
+	inline void rotate() {
+		uint32_t temp = a;
+		a = b;
+		b = c;
+		c = temp;
+	}
+	inline void unrotate() {
+		uint32_t temp = c;
+		c = b;
+		b = a;
+		a = temp;
+	}
+	
+	inline void set(const Triangle& rhs) {
+		memcpy(v, rhs.v, 12);
+	}
+
+	inline Triangle& operator=(const Triangle& rhs) {
+		memcpy(v, rhs.v, 12);
+		return *this;
+	}
+	inline Triangle& operator=(const Triangle* rhs) {
+		memcpy(v, rhs->v, 12);
+		return *this;
+	}
 };
 class Quad {
 public:

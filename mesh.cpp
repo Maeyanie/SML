@@ -129,7 +129,7 @@ void SpatialMap::build() {
 }
 
 void SpatialMap::compact() {
-	for (int i = 0; i < (mapSize*mapSize*mapSize); i++) {
+	for (unsigned int i = 0; i < (mapSize*mapSize*mapSize); i++) {
 		if (map[i].empty()) continue;
 		/*vector<uint32_t> copied;
 		copied.reserve(map[i].size());
